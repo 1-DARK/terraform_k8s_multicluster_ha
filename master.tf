@@ -1,0 +1,19 @@
+resource "aws_instance" "master" {
+  count = 2
+
+  ami           = var.ami_id
+  instance_type = var.instance_type
+
+  subnet_id = aws_subnet.private[count.index].id
+
+  vpc_security_group_ids = [
+    aws_security_group.master.id
+  ]
+
+  key_name = var.key_name
+
+  tags = {
+    Name = "k8s-master-${count.index + 1}"
+    Role = "master"
+  }
+}
